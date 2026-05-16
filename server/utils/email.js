@@ -4,10 +4,15 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
     }
 });
 
@@ -18,10 +23,10 @@ const sendBookingEmail = async (userEmail, userName, eventTitle) => {
             to: userEmail,
             subject: `Booking Confirmed: ${eventTitle}`,
             html: `
-        <h2>Hi ${userName}!</h2>
-        <p>Your booking for the event <strong>${eventTitle}</strong> is successfully confirmed.</p>
-        <p>Thank you for choosing Eventify.</p>
-      `
+                <h2>Hi ${userName}!</h2>
+                <p>Your booking for the event <strong>${eventTitle}</strong> is successfully confirmed.</p>
+                <p>Thank you for choosing Eventify.</p>
+            `
         };
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully to', userEmail);
