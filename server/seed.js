@@ -24,7 +24,7 @@ const events = [
     {
         title: 'React & Node.js Developer Retreat',
         description: 'Join us for a 3-day deep dive into modern full-stack web development. Perfect for developers looking to take their skills to the next level.',
-        date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
+        date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
         location: 'Silicon Valley Innovation Center, CA',
         category: 'Technology',
         totalSeats: 200,
@@ -34,7 +34,7 @@ const events = [
     {
         title: 'Neon Nights EDM Festival',
         description: 'Experience an unforgettable night of EDM, techno, and dazzling light shows with top DJs from around the globe.',
-        date: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000), // 20 days from now
+        date: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
         location: 'Grand Arena, New York',
         category: 'Music',
         totalSeats: 500,
@@ -44,7 +44,7 @@ const events = [
     {
         title: 'Global Leaders Business Summit',
         description: 'A premium gathering of CEOs, founders, and investors discussing the future of global commerce and AI integration.',
-        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
+        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         location: 'The Ritz-Carlton, London',
         category: 'Business',
         totalSeats: 150,
@@ -54,7 +54,7 @@ const events = [
     {
         title: 'Modern Art Expo 2024',
         description: 'Discover breathtaking contemporary and modern arts from underground and trending artists this season.',
-        date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+        date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
         location: 'Downtown Art Museum',
         category: 'Art',
         totalSeats: 300,
@@ -64,7 +64,7 @@ const events = [
     {
         title: 'Startup Pitch & Pitch Competition',
         description: 'Watch 25 startups pitch for 1 million dollars in seed funding. Great networking for entrepreneurs and angel investors.',
-        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         location: 'Convention Center, Miami',
         category: 'Business',
         totalSeats: 250,
@@ -74,7 +74,7 @@ const events = [
     {
         title: 'Cloud Computing Architecture Seminar',
         description: 'A purely technical breakdown of scalable cloud solutions, multi-region routing, and serverless compute processing.',
-        date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
+        date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000),
         location: 'Tech Hub, Seattle',
         category: 'Technology',
         totalSeats: 100,
@@ -83,17 +83,14 @@ const events = [
     }
 ];
 
+
 const seedDatabase = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/eventify');
-        console.log('\n✅ MongoDB connection open...');
-
         await User.deleteMany();
         await Event.deleteMany();
         await Booking.deleteMany();
         console.log('🗑️  Cleared existing data.');
 
-        // Hash user passwords
         const salt = await bcrypt.genSalt(10);
         const hashedUsers = users.map(u => ({
             ...u,
@@ -104,9 +101,8 @@ const seedDatabase = async () => {
         const createdUsers = await User.insertMany(hashedUsers);
         const adminUser = createdUsers.find(u => u.role === 'admin');
         const normalUsers = createdUsers.filter(u => u.role === 'user');
-        console.log(`👤 Created ${createdUsers.length} total dummy users.`);
+        console.log(`👤 Created ${createdUsers.length} users.`);
 
-        // Link events to admin
         const eventsWithAdmin = events.map(e => ({
             ...e,
             availableSeats: e.totalSeats,
@@ -114,40 +110,30 @@ const seedDatabase = async () => {
         }));
 
         const createdEvents = await Event.insertMany(eventsWithAdmin);
-        console.log(`🎉 Created ${createdEvents.length} distinct events with Unsplash images.`);
+        console.log(`🎉 Created ${createdEvents.length} events.`);
 
-        // Generate Bookings Data
         const bookingsData = [];
-
         for (const event of createdEvents) {
-            // Assign 3-6 random users to each event
             const randomCount = Math.floor(Math.random() * 4) + 3;
-            // Shuffle and pick random users
             const shuffledUsers = [...normalUsers].sort(() => 0.5 - Math.random());
             const selectedUsers = shuffledUsers.slice(0, randomCount);
 
             for (const user of selectedUsers) {
-                // Randomize statuses
                 const statuses = ['pending', 'confirmed', 'cancelled'];
                 const status = statuses[Math.floor(Math.random() * statuses.length)];
-
                 let paymentStatus = 'not_paid';
                 if (status === 'confirmed' && event.ticketPrice > 0) {
-                    // Usually confirmed tickets are marked paid (90% of the time)
                     paymentStatus = Math.random() > 0.1 ? 'paid' : 'not_paid';
                 } else if (event.ticketPrice === 0) {
                     paymentStatus = 'paid';
                 }
-
                 bookingsData.push({
                     userId: user._id,
                     eventId: event._id,
-                    status: status,
-                    paymentStatus: paymentStatus,
+                    status,
+                    paymentStatus,
                     amount: event.ticketPrice
                 });
-
-                // Deduct available seats specifically for confirmed tickets!
                 if (status === 'confirmed') {
                     event.availableSeats -= 1;
                     await event.save();
@@ -156,20 +142,13 @@ const seedDatabase = async () => {
         }
 
         await Booking.insertMany(bookingsData);
-        console.log(`🎫 Inserted ${bookingsData.length} randomized dummy bookings (confirmed, pending, cancelled, paid, not_paid).`);
+        console.log(`🎫 Inserted ${bookingsData.length} bookings.`);
+        console.log('🚀 Database seeded successfully!');
 
-        console.log('\n🚀 Database seeded successfully!');
-        console.log('-------------------------------------------');
-        console.log('Admin Email: admin@eventify.com');
-        console.log('User Email:  user@eventify.com');
-        console.log('Password for all users: password123');
-        console.log('-------------------------------------------\n');
-
-        process.exit();
     } catch (error) {
-        console.error('❌ Error seeding data:', error);
-        process.exit(1);
+        console.error('❌ Error seeding:', error);
     }
 };
 
-seedDatabase();
+
+module.exports = { seedDatabase };
