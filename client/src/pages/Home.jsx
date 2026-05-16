@@ -33,12 +33,12 @@ const Home = () => {
                 <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=3000&auto=format&fit=crop')] bg-cover bg-center"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
                 <div className="relative p-10 md:p-20 text-center flex flex-col items-center z-10">
-                    <span className="bg-white/20 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6 border border-white/20">Welcome to Eventora</span>
+                    <span className="bg-white/20 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6 border border-white/20">Welcome to Eventify</span>
                     <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-lg">
                         Find Your Next <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Unforgettable</span> Experience
                     </h1>
                     <p className="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-                        Discover the best tech conferences, late-night music festivals, and hands-on workshops happening directly in your area. Secure your spot today.
+                        Discover curated tech conferences, workshops, and events in your area. Book your spot and stay connected with relevant opportunities
                     </p>
 
                     <div className="w-full max-w-2xl mx-auto relative flex items-center shadow-2xl group">
@@ -136,13 +136,13 @@ const Home = () => {
             <footer className="mt-auto pt-16 pb-8 border-t border-gray-200 text-center">
                 <div className="flex justify-center items-center gap-2 mb-4">
                     <FaTicketAlt className="text-gray-800 text-2xl" />
-                    <span className="text-xl font-bold text-gray-900">Eventora</span>
+                    <span className="text-xl font-bold text-gray-900">Eventify</span>
                 </div>
                 <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
-                    The simplest, most dynamic way to manage, discover, and host world-class events in your local city. Let's make memories together.
+                    Discover, host, and manage events effortlessly in your city. Connect with people, explore experiences, and create unforgettable memories.
                 </p>
                 <div className="text-xs text-gray-400 font-medium uppercase tracking-wider">
-                    &copy; {new Date().getFullYear()} Eventora Platform. All rights reserved.
+                    &copy; {new Date().getFullYear()} Eventify Platform. All rights reserved.
                 </div>
             </footer>
         </div>

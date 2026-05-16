@@ -1,7 +1,7 @@
 {
-    "name": "eventora-server",
+    "name": "eventify-server",
     "version": "1.0.0",
-    "description": "Eventora Backend",
+    "description": "Eventify  Backend",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",

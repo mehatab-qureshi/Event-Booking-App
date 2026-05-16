@@ -10,3 +10,4 @@ router.put('/:id', protect, admin, updateEvent);
 router.delete('/:id', protect, admin, deleteEvent);
 
 module.exports = router;
+ 
