@@ -22,16 +22,32 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/eventify'
     .then(async () => {
         console.log('MongoDB Connected');
 
-        // ✅ Auto seed if DB is empty
         const User = require('./models/User');
-        const count = await User.countDocuments();
-        if (count === 0) {
-            console.log('Empty DB detected, seeding...');
+        const Event = require('./models/Event');
+
+        const userCount = await User.countDocuments();
+        const eventCount = await Event.countDocuments();
+
+        if (userCount === 0) {
+            // DB bilkul empty hai - full seed
+            console.log('Empty DB, full seeding...');
             const { seedDatabase } = require('./seed');
             await seedDatabase();
-            console.log('✅ Seed complete!');
+            console.log('✅ Full seed complete!');
+        } else if (eventCount === 0) {
+            // Sirf events delete hue - sirf events seed karo
+            console.log('No events found, seeding events only...');
+            const { events } = require('./seed');
+            const adminUser = await User.findOne({ role: 'admin' });
+            const eventsWithAdmin = events.map(e => ({
+                ...e,
+                availableSeats: e.totalSeats,
+                createdBy: adminUser._id
+            }));
+            await Event.insertMany(eventsWithAdmin);
+            console.log('✅ Events seeded!');
         } else {
-            console.log(`✅ DB already has data (${count} users), skipping seed.`);
+            console.log(`✅ DB has data (${userCount} users, ${eventCount} events), skipping seed.`);
         }
     })
     .catch(err => console.error('MongoDB Connection Error:', err));
