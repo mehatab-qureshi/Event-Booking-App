@@ -44,7 +44,7 @@ MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 RESEND_API_KEY=your_resend_api_key
 EMAIL_USER=your_email
-EMAIL_PASS=your_email_passekey
+EMAIL_PASS=your_email_passkey
 PORT=5000
 ```
 
