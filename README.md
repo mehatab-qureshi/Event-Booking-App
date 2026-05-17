@@ -36,15 +36,19 @@ npm install
 npm run dev
 ```
 
-### Environment Variables
-**server/.env**
+## Environment Variables
+
+### server/.env
+```env
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 RESEND_API_KEY=your_resend_api_key
 EMAIL_USER=your_email
 EMAIL_PASS=your_email_passekey
 PORT=5000
+```
 
-**client/.env**
+### client/.env
+```env
 VITE_API_URL=http://localhost:5000/api
-
+```
